@@ -15,73 +15,97 @@ import android.view.animation.LinearInterpolator;
 
 import com.hencoder.hencoderpracticedraw4.R;
 
-public class Practice14FlipboardView extends View {
-    Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-    Bitmap bitmap;
-    Camera camera = new Camera();
-    int degree;
-    ObjectAnimator animator = ObjectAnimator.ofInt(this, "degree", 0, 180);
+public class Practice14FlipboardView extends View
+{
+	Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+	Bitmap bitmap;
+	Camera camera = new Camera();
+	int degree;
+	ObjectAnimator animator = ObjectAnimator.ofInt(this, "degree", 0, 180);
 
-    public Practice14FlipboardView(Context context) {
-        super(context);
-    }
+	public Practice14FlipboardView(Context context)
+	{
+		super(context);
+	}
 
-    public Practice14FlipboardView(Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
-    }
+	public Practice14FlipboardView(Context context, @Nullable AttributeSet attrs)
+	{
+		super(context, attrs);
+	}
 
-    public Practice14FlipboardView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-    }
+	public Practice14FlipboardView(Context context, @Nullable AttributeSet attrs, int defStyleAttr)
+	{
+		super(context, attrs, defStyleAttr);
+	}
 
-    {
-        bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.maps);
+	{
+		bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.maps);
 
-        animator.setDuration(2500);
-        animator.setInterpolator(new LinearInterpolator());
-        animator.setRepeatCount(ValueAnimator.INFINITE);
-        animator.setRepeatMode(ValueAnimator.REVERSE);
-    }
+		animator.setDuration(2500);
+		animator.setInterpolator(new LinearInterpolator());
+		animator.setRepeatCount(ValueAnimator.INFINITE);
+		animator.setRepeatMode(ValueAnimator.REVERSE);
+	}
 
-    @Override
-    protected void onAttachedToWindow() {
-        super.onAttachedToWindow();
-        animator.start();
-    }
+	@Override
+	protected void onAttachedToWindow()
+	{
+		super.onAttachedToWindow();
+		animator.start();
+	}
 
-    @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        animator.end();
-    }
+	@Override
+	protected void onDetachedFromWindow()
+	{
+		super.onDetachedFromWindow();
+		animator.end();
+	}
 
-    @SuppressWarnings("unused")
-    public void setDegree(int degree) {
-        this.degree = degree;
-        invalidate();
-    }
+	@SuppressWarnings("unused")
+	public void setDegree(int degree)
+	{
+		this.degree = degree;
+		invalidate();
+	}
 
-    @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
+	@Override
+	protected void onDraw(Canvas canvas)
+	{
+		super.onDraw(canvas);
 
-        int bitmapWidth = bitmap.getWidth();
-        int bitmapHeight = bitmap.getHeight();
-        int centerX = getWidth() / 2;
-        int centerY = getHeight() / 2;
-        int x = centerX - bitmapWidth / 2;
-        int y = centerY - bitmapHeight / 2;
+		int bitmapWidth = bitmap.getWidth();
+		int bitmapHeight = bitmap.getHeight();
+		int centerX = getWidth() / 2;
+		int centerY = getHeight() / 2;
+		int x = centerX - bitmapWidth / 2;
+		int y = centerY - bitmapHeight / 2;
 
-        canvas.save();
+		//----
+		canvas.save();
+		canvas.clipRect(x, y, x + bitmap.getWidth(), y + bitmap.getHeight() / 2);
+		canvas.drawBitmap(bitmap, x, y, paint);
+		canvas.restore();
+		//---
 
-        camera.save();
-        camera.rotateX(degree);
-        canvas.translate(centerX, centerY);
-        camera.applyToCanvas(canvas);
-        canvas.translate(-centerX, -centerY);
-        camera.restore();
+		canvas.save();
 
-        canvas.drawBitmap(bitmap, x, y, paint);
-        canvas.restore();
-    }
+		//裁剪区域 有点小问题 ，不管了 ，嘿嘿
+
+
+		//过了90° 就是一条线
+		if (degree < 90)
+			canvas.clipRect(x, y + bitmap.getHeight() / 2, x + bitmap.getWidth(), y + bitmap.getHeight());
+		else
+			canvas.clipRect(x, y, x + bitmap.getWidth(), y + bitmap.getHeight() / 2);
+
+		camera.save();
+		camera.rotateX(degree);
+		canvas.translate(centerX, centerY);
+		camera.applyToCanvas(canvas);
+		canvas.translate(-centerX, -centerY);
+		camera.restore();
+
+		canvas.drawBitmap(bitmap, x, y, paint);
+		canvas.restore();
+	}
 }
