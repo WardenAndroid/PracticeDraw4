@@ -12,33 +12,42 @@ import android.view.View;
 
 import com.hencoder.hencoderpracticedraw4.R;
 
-public class Practice04ScaleView extends View {
-    Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-    Bitmap bitmap;
-    Point point1 = new Point(200, 200);
-    Point point2 = new Point(600, 200);
+public class Practice04ScaleView extends View
+{
+	Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
+	Bitmap bitmap;
+	Point point1 = new Point(200, 200);
+	Point point2 = new Point(600, 200);
 
-    public Practice04ScaleView(Context context) {
-        super(context);
-    }
+	public Practice04ScaleView(Context context)
+	{
+		super(context);
+	}
 
-    public Practice04ScaleView(Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
-    }
+	public Practice04ScaleView(Context context, @Nullable AttributeSet attrs)
+	{
+		super(context, attrs);
+	}
 
-    public Practice04ScaleView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-    }
+	public Practice04ScaleView(Context context, @Nullable AttributeSet attrs, int defStyleAttr)
+	{
+		super(context, attrs, defStyleAttr);
+	}
 
-    {
-        bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.maps);
-    }
+	{
+		bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.maps);
+	}
 
-    @Override
-    protected void onDraw(Canvas canvas) {
-        super.onDraw(canvas);
+	@Override
+	protected void onDraw(Canvas canvas)
+	{
+		super.onDraw(canvas);
 
-        canvas.drawBitmap(bitmap, point1.x, point1.y, paint);
-        canvas.drawBitmap(bitmap, point2.x, point2.y, paint);
-    }
+		canvas.drawBitmap(bitmap, point1.x, point1.y, paint);
+
+		//形变是有中心点的！！！
+		//默认是原点
+		canvas.scale(.7f, 1.5f, point2.x, point2.y);
+		canvas.drawBitmap(bitmap, point2.x, point2.y, paint);
+	}
 }
